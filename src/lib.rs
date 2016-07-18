@@ -5,16 +5,8 @@ use std::path::Path;
 /// Recognized image types
 #[derive(Debug, PartialEq)]
 pub enum Type {
-    /// SGI ImgLib files
-    Rgb,
     /// Gif 87a and 89a Files
     Gif,
-    /// Portable Bitmap files
-    Pbm,
-    /// Portable Graymap files
-    Pgm,
-    /// Portable Pixmap files
-    Ppm,
     /// TIFF files
     Tiff,
     /// Sun Raster files
@@ -55,7 +47,6 @@ fn guess(ref bytes: [u8; 32]) -> Option<Type> {
         _ if (&bytes[6..10] == JFIF) | (&bytes[6..10] == EXIF) => Some(Type::Jpeg),
         _ if (&bytes[..6] == GIF87A) | (&bytes[..6] == GIF89A) => Some(Type::Gif),
         _ if (&bytes[..2] == TIFF_MM) | (&bytes[..2] == TIFF_II) => Some(Type::Tiff),
-        _ if &bytes[0..2] == RGB => Some(Type::Rgb),
         _ if &bytes[0..4] == RAST => Some(Type::Rast),
         _ if &bytes[0..8] == XBM => Some(Type::Xbm),
         _ if (&bytes[0..4] == RIFF) & (&bytes[8..12] == WEBP) => Some(Type::Webp),
