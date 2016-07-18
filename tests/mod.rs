@@ -70,6 +70,11 @@ fn test_xbm() {
 }
 
 #[test]
+fn test_bgp() {
+    assert_result!(Some(imghdr::Type::Bgp), "./tests/images/example.bgp");
+}
+
+#[test]
 fn test_not_a_image() {
     assert_result!(None::<imghdr::Type>, "./tests/images/not-a-image.txt");
 }
