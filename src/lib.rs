@@ -33,7 +33,6 @@ const GIF87A: &'static [u8] = b"GIF87a";
 const GIF89A: &'static [u8] = b"GIF89a";
 const TIFF_MM: &'static [u8] = b"MM"; // Motorola byte order
 const TIFF_II: &'static [u8] = b"II"; // Intel byte order
-const RGB: &'static [u8] = b"\x01\xda";
 const RAST: &'static [u8] = b"\x59\xA6\x6A\x95";
 const XBM: &'static [u8] = b"#define ";
 const RIFF: &'static [u8] = b"RIFF";
