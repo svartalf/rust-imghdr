@@ -33,6 +33,8 @@ pub enum Type {
     Pgm,
     /// PPM (Portable pixmap) files
     Ppm,
+    /// SGI image library files
+    Rgb,
 }
 
 
