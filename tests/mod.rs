@@ -75,6 +75,21 @@ fn test_bgp() {
 }
 
 #[test]
+fn test_pbm() {
+    assert_result!(Some(imghdr::Type::Pbm), "./tests/images/example.pbm");
+}
+
+#[test]
+fn test_pgm() {
+    assert_result!(Some(imghdr::Type::Pgm), "./tests/images/example.pgm");
+}
+
+#[test]
+fn test_ppm() {
+    assert_result!(Some(imghdr::Type::Ppm), "./tests/images/example.ppm");
+}
+
+#[test]
 fn test_not_a_image() {
     assert_result!(None::<imghdr::Type>, "./tests/images/not-a-image.txt");
 }
