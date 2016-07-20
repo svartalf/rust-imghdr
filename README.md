@@ -2,11 +2,10 @@
 
 Library that determines the type of image contained in a file or byte stream, basically clone of the Python [imghdr](docs.python.org/library/imghdr.html) module.
 
-[![Build Status](https://travis-ci.org/svartalf/rust-imghdr.svg?branch=master)](https://travis-ci.org/svartalf/rust-imghdr)
+[![Travis Build Status](https://travis-ci.org/svartalf/rust-imghdr.svg?branch=master)](https://travis-ci.org/svartalf/rust-imghdr)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/b76fds0oafhyj8gi?svg=true)](https://ci.appveyor.com/project/svartalf/rust-imghdr)
 ![License](http://img.shields.io/:license-mit-blue.svg)
 [![Crates.io](https://img.shields.io/badge/crates.io-imghdr-green.svg)](https://crates.io/crates/imghdr)
-
-
 
 Documentation is [here](https://svartalf.github.io/rust-imghdr/imghdr/index.html).
 
