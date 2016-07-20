@@ -95,6 +95,11 @@ fn test_rgb() {
 }
 
 #[test]
+fn test_flif() {
+    assert_result!(Some(imghdr::Type::Flif), "./tests/images/example.flif");
+}
+
+#[test]
 fn test_not_a_image() {
     assert_result!(None::<imghdr::Type>, "./tests/images/not-a-image.txt");
 }

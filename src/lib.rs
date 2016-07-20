@@ -35,6 +35,8 @@ pub enum Type {
     Ppm,
     /// SGI image library files
     Rgb,
+    /// FLIF (Free Lossless Image Format) files
+    Flif,
 }
 
 
