@@ -38,7 +38,7 @@ pub enum Type {
     /// FLIF (Free Lossless Image Format) files
     Flif,
     /// ICO files
-    ICO
+    Ico
 }
 
 

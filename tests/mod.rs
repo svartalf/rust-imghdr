@@ -101,7 +101,7 @@ fn test_flif() {
 
 #[test]
 fn test_ico() {
-    assert_result!(Some(imghdr::Type::ICO), "./tests/images/example.ico");
+    assert_result!(Some(imghdr::Type::Ico), "./tests/images/example.ico");
 }
 
 #[test]

@@ -52,7 +52,7 @@ pub fn guess(ref bytes: [u8; 32]) -> Option<Type> {
         _ if &bytes[..4] == BGP => Some(Type::Bgp),
         _ if &bytes[..2] == RGB => Some(Type::Rgb),
         _ if &bytes[..4] == FLIF => Some(Type::Flif),
-        _ if &bytes[..4] == ICO => Some(Type::ICO),
+        _ if &bytes[..4] == ICO => Some(Type::Ico),
         _ if is_pbm(*bytes) => Some(Type::Pbm),
         _ if is_pgm(*bytes) => Some(Type::Pgm),
         _ if is_ppm(*bytes) => Some(Type::Ppm),
