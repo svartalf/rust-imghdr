@@ -12,6 +12,7 @@ const RAST: &'static [u8] = b"\x59\xA6\x6A\x95";
 const XBM: &'static [u8] = b"#define ";
 const RIFF: &'static [u8] = b"RIFF";
 const WEBP: &'static [u8] = b"WEBP";
+const EXR: &'static [u8] = b"\x76\x2F\x31\x01";
 const BMP: &'static [u8] = b"BM";
 const BGP: &'static [u8] = b"BPG\xfb";
 const RGB: &'static [u8] = b"\x01\xda";
@@ -39,6 +40,12 @@ fn is_ppm(ref bytes: [u8; 32]) -> bool {
         && b" \t\n\r".contains(&bytes[2]);
 }
 
+#[inline]
+fn is_rgbe(ref bytes: [u8; 32]) -> bool {
+    return &bytes[..8] == b"\x23\x3f\x52\x47\x42\x45\x0a\x47"
+        || &bytes[..8] == b"\x23\x3f\x52\x41\x44\x49\x41\x4e";
+}
+
 pub fn guess(ref bytes: [u8; 32]) -> Option<Type> {
     match () {
         _ if &bytes[..8] == PNG => Some(Type::Png),
@@ -48,6 +55,7 @@ pub fn guess(ref bytes: [u8; 32]) -> Option<Type> {
         _ if &bytes[..4] == RAST => Some(Type::Rast),
         _ if &bytes[..8] == XBM => Some(Type::Xbm),
         _ if (&bytes[..4] == RIFF) && (&bytes[8..12] == WEBP) => Some(Type::Webp),
+        _ if (&bytes[..4] == EXR) => Some(Type::Exr),
         _ if &bytes[..2] == BMP => Some(Type::Bmp),
         _ if &bytes[..4] == BGP => Some(Type::Bgp),
         _ if &bytes[..2] == RGB => Some(Type::Rgb),
@@ -56,6 +64,7 @@ pub fn guess(ref bytes: [u8; 32]) -> Option<Type> {
         _ if is_pbm(*bytes) => Some(Type::Pbm),
         _ if is_pgm(*bytes) => Some(Type::Pgm),
         _ if is_ppm(*bytes) => Some(Type::Ppm),
+        _ if is_rgbe(*bytes) => Some(Type::Rgbe),
         _ => None
     }
 }

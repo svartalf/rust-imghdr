@@ -55,6 +55,11 @@ fn test_webp() {
 }
 
 #[test]
+fn test_exr() {
+    assert_result!(Some(imghdr::Type::Exr), "./tests/images/example.exr");
+}
+
+#[test]
 fn test_bmp() {
     assert_result!(Some(imghdr::Type::Bmp), "./tests/images/example.bmp");
 }
@@ -92,6 +97,11 @@ fn test_ppm() {
 #[test]
 fn test_rgb() {
     assert_result!(Some(imghdr::Type::Rgb), "./tests/images/example.rgb");
+}
+
+#[test]
+fn test_rgbe() {
+    assert_result!(Some(imghdr::Type::Rgbe), "./tests/images/example.hdr");
 }
 
 #[test]
