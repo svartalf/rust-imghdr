@@ -100,6 +100,11 @@ fn test_flif() {
 }
 
 #[test]
+fn test_ico() {
+    assert_result!(Some(imghdr::Type::Ico), "./tests/images/example.ico");
+}
+
+#[test]
 fn test_not_a_image() {
     assert_result!(None::<imghdr::Type>, "./tests/images/not-a-image.txt");
 }
