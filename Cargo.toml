@@ -1,6 +1,6 @@
 [package]
 name = "imghdr"
-version = "0.5.0"
+version = "0.6.0"
 authors = ["svartalf <self@svartalf.info>"]
 description = "Library that determines the type of image contained in a file or byte stream."
 documentation = "https://svartalf.github.io/rust-imghdr/imghdr/index.html"
