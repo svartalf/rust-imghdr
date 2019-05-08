@@ -1,11 +1,30 @@
 [package]
 name = "imghdr"
-version = "0.6.0"
+version = "0.7.0"
 authors = ["svartalf <self@svartalf.info>"]
 description = "Library that determines the type of image contained in a file or byte stream."
-documentation = "https://svartalf.github.io/rust-imghdr/imghdr/index.html"
 keywords = ["image", "gif", "jpeg", "png", "webp"]
 categories = ["multimedia::images"]
 repository = "https://github.com/svartalf/rust-imghdr"
-license = "MIT"
-edition = "2015"
+license = "Apache-2.0 OR MIT"
+edition = "2018"
+readme = "README.md"
+
+[features]
+default = ["std"]
+std = []
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[example]]
+name = "what"
+required-features = ["std"]
+
+[[bench]]
+name = "images"
+harness = false
+
+[badges]
+maintenance = { status = "passively-maintained" }
+travis-ci = { repository = "svartalf/rust-imghdr", branch = "master" }

@@ -1,4 +1,8 @@
-use ::Type;
+use crate::Type;
+
+/// Maximum amount of bytes required for a format recognition
+#[allow(dead_code)]
+pub(crate) const MAX_LENGTH: usize = 12;
 
 // Magic numbers
 const PNG: &'static [u8] = b"\x89PNG\r\n\x1a\n";
@@ -20,33 +24,54 @@ const FLIF: &'static [u8] = b"FLIF";
 const ICO: &'static [u8] = b"\x00\x00\x01\x00";
 
 #[inline]
-fn is_pbm(ref bytes: [u8; 32]) -> bool {
-    return bytes[0] == b'P'
-        && b"14".contains(&bytes[1])
-        && b" \t\n\r".contains(&bytes[2]);
+fn is_pbm(bytes: &[u8]) -> bool {
+    if bytes.len() < 3 {
+        return false;
+    }
+
+    // Safe, because length check was done before
+    let a = unsafe { *bytes.get_unchecked(0) };
+    let b = unsafe { *bytes.get_unchecked(1) };
+    let c = unsafe { *bytes.get_unchecked(2) };
+
+    a == b'P' && (b == b'1' || b == b'4') && (c == b' ' || c == b'\t' || c == b'\n' || c == b'\r')
 }
 
 #[inline]
-fn is_pgm(ref bytes: [u8; 32]) -> bool {
-    return bytes[0] == b'P'
-        && b"25".contains(&bytes[1])
-        && b" \t\n\r".contains(&bytes[2]);
+fn is_pgm(bytes: &[u8]) -> bool {
+    if bytes.len() < 3 {
+        return false;
+    }
+
+    // Safe, because length check was done before
+    let a = unsafe { *bytes.get_unchecked(0) };
+    let b = unsafe { *bytes.get_unchecked(1) };
+    let c = unsafe { *bytes.get_unchecked(2) };
+
+    a == b'P' && (b == b'2' || b == b'5') && (c == b' ' || c == b'\t' || c == b'\n' || c == b'\r')
 }
 
 #[inline]
-fn is_ppm(ref bytes: [u8; 32]) -> bool {
-    return bytes[0] == b'P'
-        && b"36".contains(&bytes[1])
-        && b" \t\n\r".contains(&bytes[2]);
+fn is_ppm(bytes: &[u8]) -> bool {
+    if bytes.len() < 3 {
+        return false;
+    }
+
+    // Safe, because length check was done before
+    let a = unsafe { *bytes.get_unchecked(0) };
+    let b = unsafe { *bytes.get_unchecked(1) };
+    let c = unsafe { *bytes.get_unchecked(2) };
+
+    a == b'P' && (b == b'3' || b == b'6') && (c == b' ' || c == b'\t' || c == b'\n' || c == b'\r')
 }
 
 #[inline]
-fn is_rgbe(ref bytes: [u8; 32]) -> bool {
-    return &bytes[..8] == b"\x23\x3f\x52\x47\x42\x45\x0a\x47"
-        || &bytes[..8] == b"\x23\x3f\x52\x41\x44\x49\x41\x4e";
+fn is_rgbe(bytes: &[u8]) -> bool {
+    &bytes[..8] == b"\x23\x3f\x52\x47\x42\x45\x0a\x47"
+        || &bytes[..8] == b"\x23\x3f\x52\x41\x44\x49\x41\x4e"
 }
 
-pub fn guess(ref bytes: [u8; 32]) -> Option<Type> {
+pub fn guess(bytes: &[u8]) -> Option<Type> {
     match () {
         _ if &bytes[..8] == PNG => Some(Type::Png),
         _ if (&bytes[6..10] == JFIF) || (&bytes[6..10] == EXIF) => Some(Type::Jpeg),
@@ -61,10 +86,10 @@ pub fn guess(ref bytes: [u8; 32]) -> Option<Type> {
         _ if &bytes[..2] == RGB => Some(Type::Rgb),
         _ if &bytes[..4] == FLIF => Some(Type::Flif),
         _ if &bytes[..4] == ICO => Some(Type::Ico),
-        _ if is_pbm(*bytes) => Some(Type::Pbm),
-        _ if is_pgm(*bytes) => Some(Type::Pgm),
-        _ if is_ppm(*bytes) => Some(Type::Ppm),
-        _ if is_rgbe(*bytes) => Some(Type::Rgbe),
-        _ => None
+        _ if is_pbm(bytes) => Some(Type::Pbm),
+        _ if is_pgm(bytes) => Some(Type::Pgm),
+        _ if is_ppm(bytes) => Some(Type::Ppm),
+        _ if is_rgbe(bytes) => Some(Type::Rgbe),
+        _ => None,
     }
 }

@@ -1,11 +1,63 @@
-use std::fs::File;
-use std::io::{Read, Error, ErrorKind};
-use std::path::Path;
+//! Library that determines the type of image contained in a file or byte stream,
+//! basically the clone of the Python [imghdr](https://docs.python.org/library/imghdr.html) module.
+//!
+//! ## No-std support
+//!
+//! Can be used in `no-std` environments with disabled `std` feature (enabled by default).
+//!
+//!
+//! ## Examples
+//!
+//! Check the file directly:
+//!
+//! ```rust
+//! # extern crate imghdr;
+//! # fn main() {
+//! match imghdr::from_file("./tests/images/example.png") {
+//!     Ok(Some(imghdr::Type::Png)) => println!("Yep, it is a PNG"),
+//!     Ok(..) => println!("Nope, it is definitely not a PNG"),
+//!     Err(e) => println!("Some error happened: {:?}", e),
+//! }
+//! # }
+//! ```
+//!
+//! Or check the bytes stream:
+//!
+//! ```rust
+//! # extern crate imghdr;
+//! # use std::fs::File;
+//! # use std::io::{self, Read};
+//! #
+//! # fn main() -> io::Result<()> {
+//! let mut file = File::open("./tests/images/example.jpeg")?;
+//! let mut content: Vec<u8> = vec![];
+//! file.read_to_end(&mut content)?;
+//!
+//! match imghdr::from_bytes(&content) {
+//!     Some(imghdr::Type::Jpeg) => println!("And this is a Jpeg"),
+//!     _ => println!("Can a Png, Bmp or other file format"),
+//! }
+//!
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! It is not required to pass the fully read file into the crate functions,
+//! right now `imghdr` requires only first 12 bytes of contents
+//! for image format recognition.
+
+#![cfg_attr(not(feature = "std"), no_std)]
 
 mod patterns;
 
+#[cfg(feature = "std")]
+mod std_ext;
+
+#[cfg(feature = "std")]
+pub use self::std_ext::*;
+
 /// Recognized image types
-#[derive(Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Type {
     /// Gif 87a and 89a Files
     Gif,
@@ -40,52 +92,16 @@ pub enum Type {
     /// FLIF (Free Lossless Image Format) files
     Flif,
     /// ICO files
-    Ico
+    Ico,
 }
 
-
-/// Tests the image data contained in the `f` bytes stream.
+/// Try to determine image format from a bytes slice.
 ///
-/// # Examples
+/// This function is available in a `no_std` environment.
 ///
-/// ```rust,ignore
-/// use std::fs::File;
-/// use std::io::Read;
+/// ## Returns
 ///
-/// let mut file = File::open("/path/to/image.png").unwrap();
-/// let mut content: Vec<u8> = vec![];
-/// file.read_to_end(&mut content).unwrap();
-/// println!("{:?}", imghdr::what(content.as_slice()));
-/// ```
-pub fn what<T: Read>(mut f: T) -> Option<Type> {
-    let mut buffer = [0; 32];
-    f.read(&mut buffer).unwrap();
-
-    patterns::guess(buffer)
-}
-
-
-/// Open file and test if it an image.
-///
-/// # Errors
-///
-/// This function will return an `std::io::Error` if file is inaccessible or can't be read.
-///
-/// Also it will return an `std::io::Error` with a `std::io::ErrorKind::InvalidData` kind
-/// if file is not an image.
-///
-/// # Examples
-///
-/// ```rust,ignore
-/// imghdr.open("/path/to/image.jpg").unwrap();
-/// ```
-pub fn open<T: AsRef<Path>>(path: T) -> Result<Type, Error> {
-    let mut file = try!(File::open(path));
-    let mut buffer = [0; 32];
-    try!(file.read_exact(&mut buffer));
-
-    match patterns::guess(buffer) {
-        Some(image) => Ok(image),
-        None => Err(Error::new(ErrorKind::InvalidData, "Unknown file format"))
-    }
+/// `Some(Type)` if it is a known image format, `None` otherwise.
+pub fn from_bytes<T: AsRef<[u8]>>(buf: T) -> Option<Type> {
+    patterns::guess(buf.as_ref())
 }

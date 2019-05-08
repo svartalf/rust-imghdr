@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.0] - 2019-05-08
+### Added
+ - `from_reader` function which allows to determine image format from the generic `T: Read` argument
+
+### Changed
+ - Crate was updated to Rust edition 2018 (minimal rustc version is `1.31` now)
+ - Crate was re-licensed under the dual `Apache 2.0` or `MIT` license
+ - `open` function was renamed into `from_file`, it returns `Result<Option<Type>>` now
+ - `what` function was renamed into `from_bytes`
+ - `from_file` and `from_reader` functions are available only with `std` feature (enabled by default)
+ - `from_bytes` function can be used in the `no_std` environments
+
 ## [0.6.0] - 2019-05-07
 ### Added
  - Support for EXR and HDR (RGBE) formats ([#2](https://github.com/svartalf/rust-imghdr/pull/2))

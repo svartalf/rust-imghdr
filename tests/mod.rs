@@ -1,37 +1,30 @@
 #[cfg(test)]
-
 use std::fs::File;
 use std::io::Read;
 
 extern crate imghdr;
 
 macro_rules! assert_result {
-    ($format:expr, $path:expr) => (
-        {
-            let result = imghdr::open($path);
-            match $format {
-                Some(type_) => assert_eq!(type_, result.unwrap()),
-                None => assert!(result.is_err()),
-            }
-        }
-        {
-            let file = File::open($path);
-            if file.is_err() & $format.is_none() {
-                return;
-            } else {
-                let mut content: Vec<u8> = vec![];
-                file.unwrap().read_to_end(&mut content).unwrap();
+    ($format:expr, $path:expr) => {{
+        let result = imghdr::from_file($path).unwrap();
 
-                let result = imghdr::what(content.as_slice());
-                match $format {
-                    Some(type_) => assert_eq!(type_, result.unwrap()),
-                    None => assert!(result.is_none()),
-                }
-            }
-            /*
-            */
+        assert_eq!($format, result);
+    }
+    {
+        let file = File::open($path);
+        if file.is_err() & $format.is_none() {
+            return;
+        } else {
+            let mut content: Vec<u8> = vec![];
+            file.unwrap().read_to_end(&mut content).unwrap();
+
+            let result = imghdr::from_bytes(content.as_slice());
+
+            assert_eq!($format, result);
         }
-    )
+        /*
+         */
+    }};
 }
 
 #[test]
@@ -120,6 +113,7 @@ fn test_not_a_image() {
 }
 
 #[test]
+#[should_panic] // macro unwraps the `File::open` result
 fn test_not_a_file() {
     assert_result!(None::<imghdr::Type>, "./tests/images/not-existing-file.foo");
 }
