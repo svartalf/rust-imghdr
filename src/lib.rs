@@ -93,6 +93,8 @@ pub enum Type {
     Flif,
     /// ICO files
     Ico,
+    /// AVIF files
+    Avif,
 }
 
 /// Try to determine image format from a bytes slice.
