@@ -113,6 +113,11 @@ fn test_ico() {
 }
 
 #[test]
+fn test_avif() {
+    assert_result!(Some(imghdr::Type::Avif), "./tests/images/example.avif");
+}
+
+#[test]
 fn test_not_a_image() {
     assert_result!(None::<imghdr::Type>, "./tests/images/not-a-image.txt");
 }

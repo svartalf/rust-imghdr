@@ -23,6 +23,7 @@ const BGP: &'static [u8] = b"BPG\xfb";
 const RGB: &'static [u8] = b"\x01\xda";
 const FLIF: &'static [u8] = b"FLIF";
 const ICO: &'static [u8] = b"\x00\x00\x01\x00";
+const AVIF: &'static [u8] = b"avif";
 
 #[inline]
 fn is_pbm(bytes: &[u8]) -> bool {
@@ -89,6 +90,7 @@ pub fn guess(bytes: &[u8]) -> Option<Type> {
         _ if &bytes[..2] == RGB => Some(Type::Rgb),
         _ if &bytes[..4] == FLIF => Some(Type::Flif),
         _ if &bytes[..4] == ICO => Some(Type::Ico),
+        _ if (&bytes[8..12] == AVIF) => Some(Type::Avif),
         _ if is_pbm(bytes) => Some(Type::Pbm),
         _ if is_pgm(bytes) => Some(Type::Pgm),
         _ if is_ppm(bytes) => Some(Type::Ppm),
