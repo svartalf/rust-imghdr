@@ -75,26 +75,29 @@ fn is_rgbe(bytes: &[u8]) -> bool {
 
 pub fn guess(bytes: &[u8]) -> Option<Type> {
     match () {
-        _ if &bytes[..8] == PNG => Some(Type::Png),
-        _ if (&bytes[6..10] == JFIF) || (&bytes[6..10] == EXIF || (&bytes[3..6]) == JPEGRAW) => {
-            Some(Type::Jpeg)
-        }
-        _ if (&bytes[..6] == GIF87A) || (&bytes[..6] == GIF89A) => Some(Type::Gif),
-        _ if (&bytes[..2] == TIFF_MM) || (&bytes[..2] == TIFF_II) => Some(Type::Tiff),
-        _ if &bytes[..4] == RAST => Some(Type::Rast),
-        _ if &bytes[..8] == XBM => Some(Type::Xbm),
-        _ if (&bytes[..4] == RIFF) && (&bytes[8..12] == WEBP) => Some(Type::Webp),
-        _ if (&bytes[..4] == EXR) => Some(Type::Exr),
-        _ if &bytes[..2] == BMP => Some(Type::Bmp),
-        _ if &bytes[..4] == BGP => Some(Type::Bgp),
-        _ if &bytes[..2] == RGB => Some(Type::Rgb),
-        _ if &bytes[..4] == FLIF => Some(Type::Flif),
-        _ if &bytes[..4] == ICO => Some(Type::Ico),
-        _ if (&bytes[8..12] == AVIF) => Some(Type::Avif),
-        _ if is_pbm(bytes) => Some(Type::Pbm),
-        _ if is_pgm(bytes) => Some(Type::Pgm),
-        _ if is_ppm(bytes) => Some(Type::Ppm),
-        _ if is_rgbe(bytes) => Some(Type::Rgbe),
-        _ => None,
+        _ if  &bytes[..8]   == PNG                                                              => Some(Type::Png),
+        _ if (&bytes[6..10] == JFIF)    ||
+             (&bytes[6..10] == EXIF     ||
+              &bytes[3..6]  == JPEGRAW)                                                         => Some(Type::Jpeg),
+        _ if (&bytes[..6]   == GIF87A)  ||
+             (&bytes[..6]   == GIF89A)                                                          => Some(Type::Gif),
+        _ if (&bytes[..2]   == TIFF_MM) ||
+             (&bytes[..2]   == TIFF_II)                                                         => Some(Type::Tiff),
+        _ if  &bytes[..4]   == RAST                                                             => Some(Type::Rast),
+        _ if  &bytes[..8]   == XBM                                                              => Some(Type::Xbm),
+        _ if (&bytes[..4]   == RIFF)    &&
+             (&bytes[8..12] == WEBP)                                                            => Some(Type::Webp),
+        _ if  &bytes[..4]   == EXR                                                              => Some(Type::Exr),
+        _ if  &bytes[..2]   == BMP                                                              => Some(Type::Bmp),
+        _ if  &bytes[..4]   == BGP                                                              => Some(Type::Bgp),
+        _ if  &bytes[..2]   == RGB                                                              => Some(Type::Rgb),
+        _ if  &bytes[..4]   == FLIF                                                             => Some(Type::Flif),
+        _ if  &bytes[..4]   == ICO                                                              => Some(Type::Ico),
+        _ if  &bytes[8..12] == AVIF                                                             => Some(Type::Avif),
+        _ if  is_pbm(bytes)                                                                     => Some(Type::Pbm),
+        _ if  is_pgm(bytes)                                                                     => Some(Type::Pgm),
+        _ if  is_ppm(bytes)                                                                     => Some(Type::Ppm),
+        _ if  is_rgbe(bytes)                                                                    => Some(Type::Rgbe),
+        _                                                                                       => None,
     }
 }
