@@ -8,6 +8,7 @@ pub(crate) const MAX_LENGTH: usize = 12;
 const PNG: &'static [u8] = b"\x89PNG\r\n\x1a\n";
 const JFIF: &'static [u8] = b"JFIF";
 const EXIF: &'static [u8] = b"Exif";
+const JPEGRAW: &'static [u8] = b"\xDB\x00C"; // JPG RAW/Lossless without JFIF
 const GIF87A: &'static [u8] = b"GIF87a";
 const GIF89A: &'static [u8] = b"GIF89a";
 const TIFF_MM: &'static [u8] = b"MM"; // Motorola byte order
@@ -22,6 +23,7 @@ const BGP: &'static [u8] = b"BPG\xfb";
 const RGB: &'static [u8] = b"\x01\xda";
 const FLIF: &'static [u8] = b"FLIF";
 const ICO: &'static [u8] = b"\x00\x00\x01\x00";
+const AVIF: &'static [u8] = b"avif";
 
 #[inline]
 fn is_pbm(bytes: &[u8]) -> bool {
@@ -73,23 +75,29 @@ fn is_rgbe(bytes: &[u8]) -> bool {
 
 pub fn guess(bytes: &[u8]) -> Option<Type> {
     match () {
-        _ if &bytes[..8] == PNG => Some(Type::Png),
-        _ if (&bytes[6..10] == JFIF) || (&bytes[6..10] == EXIF) => Some(Type::Jpeg),
-        _ if (&bytes[..6] == GIF87A) || (&bytes[..6] == GIF89A) => Some(Type::Gif),
-        _ if (&bytes[..2] == TIFF_MM) || (&bytes[..2] == TIFF_II) => Some(Type::Tiff),
-        _ if &bytes[..4] == RAST => Some(Type::Rast),
-        _ if &bytes[..8] == XBM => Some(Type::Xbm),
-        _ if (&bytes[..4] == RIFF) && (&bytes[8..12] == WEBP) => Some(Type::Webp),
-        _ if (&bytes[..4] == EXR) => Some(Type::Exr),
-        _ if &bytes[..2] == BMP => Some(Type::Bmp),
-        _ if &bytes[..4] == BGP => Some(Type::Bgp),
-        _ if &bytes[..2] == RGB => Some(Type::Rgb),
-        _ if &bytes[..4] == FLIF => Some(Type::Flif),
-        _ if &bytes[..4] == ICO => Some(Type::Ico),
-        _ if is_pbm(bytes) => Some(Type::Pbm),
-        _ if is_pgm(bytes) => Some(Type::Pgm),
-        _ if is_ppm(bytes) => Some(Type::Ppm),
-        _ if is_rgbe(bytes) => Some(Type::Rgbe),
-        _ => None,
+        _ if  &bytes[..8]   == PNG                                                              => Some(Type::Png),
+        _ if (&bytes[6..10] == JFIF)    ||
+             (&bytes[6..10] == EXIF     ||
+              &bytes[3..6]  == JPEGRAW)                                                         => Some(Type::Jpeg),
+        _ if (&bytes[..6]   == GIF87A)  ||
+             (&bytes[..6]   == GIF89A)                                                          => Some(Type::Gif),
+        _ if (&bytes[..2]   == TIFF_MM) ||
+             (&bytes[..2]   == TIFF_II)                                                         => Some(Type::Tiff),
+        _ if  &bytes[..4]   == RAST                                                             => Some(Type::Rast),
+        _ if  &bytes[..8]   == XBM                                                              => Some(Type::Xbm),
+        _ if (&bytes[..4]   == RIFF)    &&
+             (&bytes[8..12] == WEBP)                                                            => Some(Type::Webp),
+        _ if  &bytes[..4]   == EXR                                                              => Some(Type::Exr),
+        _ if  &bytes[..2]   == BMP                                                              => Some(Type::Bmp),
+        _ if  &bytes[..4]   == BGP                                                              => Some(Type::Bgp),
+        _ if  &bytes[..2]   == RGB                                                              => Some(Type::Rgb),
+        _ if  &bytes[..4]   == FLIF                                                             => Some(Type::Flif),
+        _ if  &bytes[..4]   == ICO                                                              => Some(Type::Ico),
+        _ if  &bytes[8..12] == AVIF                                                             => Some(Type::Avif),
+        _ if  is_pbm(bytes)                                                                     => Some(Type::Pbm),
+        _ if  is_pgm(bytes)                                                                     => Some(Type::Pgm),
+        _ if  is_ppm(bytes)                                                                     => Some(Type::Ppm),
+        _ if  is_rgbe(bytes)                                                                    => Some(Type::Rgbe),
+        _                                                                                       => None,
     }
 }

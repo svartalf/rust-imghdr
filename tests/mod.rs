@@ -38,6 +38,11 @@ fn test_jpeg() {
 }
 
 #[test]
+fn test_jpg_raw() {
+    assert_result!(Some(imghdr::Type::Jpeg), "./tests/images/example_raw.jpg");
+}
+
+#[test]
 fn test_gif() {
     assert_result!(Some(imghdr::Type::Gif), "./tests/images/example.gif");
 }
@@ -105,6 +110,11 @@ fn test_flif() {
 #[test]
 fn test_ico() {
     assert_result!(Some(imghdr::Type::Ico), "./tests/images/example.ico");
+}
+
+#[test]
+fn test_avif() {
+    assert_result!(Some(imghdr::Type::Avif), "./tests/images/example.avif");
 }
 
 #[test]
