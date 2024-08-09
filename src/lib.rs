@@ -56,8 +56,13 @@ mod std_ext;
 #[cfg(feature = "std")]
 pub use self::std_ext::*;
 
+#[cfg(feature="serde")]
+#[macro_use]
+extern crate serde;
+
 /// Recognized image types
 #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Type {
     /// Gif 87a and 89a Files
     Gif,
